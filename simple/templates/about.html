@@ -1,0 +1,9 @@
+{%extends "layout.html"%}
+{%block content%}
+  <h1>welcome to about page</h1>
+  <a href="./home"><h1>Go Back to home Page !!</h1></a>
+  <p>This is the about page</p>
+    <video autoplay muted loop class="img-fluid w-50 d-none d-sm-block" id="myVideo">
+              <source class="w-50 d-none d-sm-block"  src="{{url_for('static', filename='Blue linear Logo template with Landscape. Ski resort..mp4')}}" type="video/mp4">
+            </video>
+{%endblock content%}

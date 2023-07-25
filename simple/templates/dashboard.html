@@ -1,0 +1,22 @@
+{%extends "layout.html"%}
+
+{%block content%}
+<div class="container my-5">
+  <nav>
+    <div class="nav nav-tabs" id="tablist">
+      <a class="link" href="/dashboard/profile"><button class="{{'nav-link active' if active_tab=='profile' else 'nav-link'}}" id="nav-profile-tab" data-bs-toggle="tap" type="button" aria-controls="nav-profile"
+      data-bs-target="#nav-profile" role="tab" aria-selected="true">Profile</button></a>
+      <a class="link" href="/dashboard/new_lesson"><button class="{{'nav-link active' if active_tab=='new_lesson' else 'nav-link'}}" id="nav-newlesson-tab" data-bs-toggle="tap" type="button" aria-controls="nav-newlesson"
+      data-bs-target="#nav-newlesson" role="tab" aria-selected="true">New lesson</button></a>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+        <!-- Profile -->
+        {%block profile %} {%endblock profile%}
+        {# new lesson #}
+        {%block new_lesson%}{%endblock new_lesson%}
+    </div>
+</div>
+
+
+{%endblock content%}
