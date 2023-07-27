@@ -2,34 +2,77 @@
 
 {%block new_lesson%}
 <div class="{{'tab-pane show active fade p-3' if active_tab=='new_lesson' else 'tab-pane fade p-3'}}">
-  <form action="/dashboard/new_lesson" method="post">
+  <form action="/dashboard/new_lesson" method="post" enctype="multipart/form-data">
     {{new_lesson_form.hidden_tag()}}
     <legend class="border-bottom my-3">New Lesson<legend>
       <div class="mb-3">
-        <label for="courses" class="form-label">Course</label>
-        <select name="" class="form-select" id="">
-        <option selected>Choose a Course</option>
-        <option value="1">Option One</option>
-        <option value="2">Option TWO</option>
-        <option value="3">Option Three</option>
-        </select>
-        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#newCourse">Add new course</button>
+        {{new_lesson_form.course.label(class='form-control-label')}}
+        {%if new_lesson_form.course.errors%}
+        {{new_lesson_form.course(class='form-control is-invalid')}}
+        <div class="invalid-feedback">
+        {%for error in new_lesson_form.course.errors%}
+        <span>{{error}}</span>
+        {%endfor%}
+        </div>
+        {%else%}
+        {{new_lesson_form.course(class='form-select')}}
+        {%endif%}
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#newCourse">
+        Add new course</button>
       </div>
       <div class="mb-3">
-      <label for="title" class="form-label">Title</label>
-      <input type="text" id="title" placeholder="Example:- 'Pandas', 'OOP'" class="form-control">
+      {{new_lesson_form.title.label(class='form-control-label')}}
+      {%if new_lesson_form.title.errors%}
+      {{new_lesson_form.title(class='form-control is-invalid')}}
+      <div class="invalid-feedback">
+        {%for error in new_lesson_form.title.errors%}
+        <span>{{error}}</span>
+        {%endfor%}
+        </div>
+        {%else%}
+        {{new_lesson_form.title(class='form-control')}}
+        
+      
+      {%endif%}
       </div>
       <div class="mb-3">
-      <label for="slug" class="form-label">SLug</label>
-      <input type="slug" id="slug" placeholder="Descriptive Short version of your Lesson " class="form-control">
+      {{new_lesson_form.slug.label(class='form-control-label')}}
+      {%if new_lesson_form.slug.errors%}
+      {{new_lesson_form.slug(class='form-control is-invalid')}}
+      <div class="invalid-feedback">
+      {%for error in new_lesson_form.slug.errors%}
+      <span>{{error}}</span> 
+      {%endfor%}
+      </div>
+      {%else%}
+      {{new_lesson_form.slug(class='form-control')}}
+      {%endif%}
       </div>
       <div class="mb-3">
-      <label for="Lesson" class="form-label">Lesson Artical</label>
-      <textarea id="Lesson" class="form-control" rows="20"></textarea>
+        {{new_lesson_form.content.label(class='form-control-label')}}
+      {%if new_lesson_form.content.errors%}
+      {{new_lesson_form.content(class='form-control is-invalid')}}
+      <div class="invalid-feedback">
+      {%for error in new_lesson_form.content.errors%}
+      <span>{{error}}</span> 
+      {%endfor%}
+      </div>
+      {%else%}
+      {{new_lesson_form.content(class='form-control')}}
+      {%endif%}
       </div>
       <div class="mb-3">
-      <label for="LessonImg" class="form-label">Lesson Image</label>
-      <input type="file" id="LessonImg" class="form-control" rows="20">
+        {{new_lesson_form.thumbnail.label(class='form-control-label')}}
+      {%if new_lesson_form.thumbnail.errors%}
+      {{new_lesson_form.thumbnail(class='form-control is-invalid')}}
+      <div class="invalid-feedback">
+      {%for error in new_lesson_form.thumbnail.errors%}
+      <span>{{error}}</span> 
+      {%endfor%}
+      </div>
+      {%else%}
+      {{new_lesson_form.thumbnail(class='form-control')}}
+      {%endif%}
       </div>
 
 
@@ -39,6 +82,8 @@
       </div>
     </div>
   </form>
+  {{ckeditor.load()}}
+  {{ckeditor.config(name='content')}}
   <div class="modal fade" id="newCourse" tabindex="-1" aria-labelledby="newCourseModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
