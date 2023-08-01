@@ -134,3 +134,9 @@ body::before {
     cursor: pointer;
     border-radius: 25px;
 }
+
+.course-imge-dash{
+  height: 50px;
+  width: 50px ;
+
+}

@@ -30,6 +30,21 @@ def save_pic(formpic,path='static/user_pics',output_size=None):
     return picture_name
 
 
+#
+def get_previous_next_lesson(lesson):
+    course = lesson.course_name
+    for lsn in course.lessons:
+        if lsn.title == lesson.title:
+            index = course.lessons.index(lsn)
+            previous_lesson = course.lessons[index - 1] if index > 0 else None
+            next_lesson = (
+                course.lessons[index + 1] if index < len(course.lessons) - 1 else None
+            )
+            break
+    return previous_lesson, next_lesson
+    
+      
+
 @app.route('/')
 @app.route('/home',methods=['POST','GET'])
 def home():
@@ -142,6 +157,7 @@ def new_lesson():
   if form == "new_lesson_form" and new_lesson_form.validate_on_submit():
     if new_lesson_form.thumbnail.data:
       pic_file = save_pic(new_lesson_form.thumbnail.data, path='static/lesson_thumbnails',output_size=(250,300))
+    
     lesson_slug = str(new_lesson_form.slug.data).replace(" ", "-")
     course = new_lesson_form.course.data
     lesson = Lesson(
@@ -173,6 +189,8 @@ def new_course():
   if new_course_form.validate_on_submit():
       if new_course_form.icon.data:
         pic_file = save_pic(new_course_form.icon.data,path='static/course_icon',output_size=(150,150))
+      # This is to remove spaces from the title and replace them with dashes 
+      # to be used in the url SEO friendly
       course_title = str(new_course_form.title.data).replace(" ", "-")
       course_description = new_course_form.description.data
       soup = BeautifulSoup(course_description, 'html.parser')
@@ -192,3 +210,27 @@ def new_course():
                         title='New course',
                         new_course_form=new_course_form,
                         active_tab="new_course")
+
+
+
+@app.route("/<string:course>/<string:lesson_slug>")
+
+def lesson(lesson_slug,course):
+  lesson = Lesson.query.filter_by(slug=lesson_slug).first()
+  if lesson:
+    previous_lesson, next_lesson = get_previous_next_lesson(lesson)
+  lesson_id = lesson.id if lesson else None
+  lesson = Lesson.query.get_or_404(lesson_id)
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  return render_template("lesson.html",title=lesson.title,lesson=lesson,img_file=img_file,previous_lesson=previous_lesson,next_lesson=next_lesson)
+  
+  
+@app.route("/<string:course_title>")
+def course(course_title):
+  course = Course.query.filter_by(title=course_title).first()
+  course_id = course.id if course else None
+  course = Course.query.get_or_404(course_id)
+  courses = Course.query.all()
+  
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  return render_template("course.html",courses=courses,title=course.title,course=course,img_file=img_file)
