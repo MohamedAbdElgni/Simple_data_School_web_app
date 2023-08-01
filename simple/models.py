@@ -34,7 +34,7 @@ class Lesson(db.Model):
   title = db.Column(db.String(100),nullable=False)
   date_posted = db.Column(db.DateTime,nullable = False,default = datetime.utcnow)
   content = db.Column(db.Text, nullable=False)
-  thumbnail = db.Column(db.String(20),nullable=False,default='default')
+  thumbnail = db.Column(db.String(20),nullable=False,default='default_lesson.png')
   slug = db.Column(db.String(32),nullable=False)
   user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
   course_id = db.Column(db.Integer,db.ForeignKey('course.id'),nullable=False)
@@ -46,7 +46,7 @@ class Course(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(50),unique=True,nullable=False)
   description = db.Column(db.String(150),nullable=False)
-  icon = db.Column(db.String(20),nullable=False,default='default.png')
+  icon = db.Column(db.String(20),nullable=False,default='default_icon.png')
   lessons = db.relationship('Lesson',backref='course_name',lazy=True)
   def __repr__(self):
     return f"'{self.id}','{self.title}','{self.description}','{self.icon}'"

@@ -1,32 +1,45 @@
-from flask import Flask, render_template,redirect, url_for, flash,request
-from simple.forms import RegistrationForm, LoginForm, UpdateProfileForm, NewLessonForm
+from flask import Flask, render_template, redirect, url_for, flash, request, session, Markup
+
+from simple.forms import RegistrationForm, LoginForm, UpdateProfileForm, NewLessonForm, NewCourseForm
 from simple.models import Lesson, User, Course
-from simple import app,lessons,courses,bcrypt,db
+from simple import app,bcrypt,db,modal
 from flask_login import login_user,current_user,logout_user,login_required
+from flask_modals import render_template_modal
+
 import secrets
 import os
 from PIL import Image
+from bs4 import BeautifulSoup
 
 
-def save_pic(formpic):
+def save_pic(formpic,path='static/user_pics',output_size=None):
   random_hex = secrets.token_hex(8)
   _, f_ext = os.path.splitext(formpic.filename)
   picture_name = random_hex + f_ext
-  pic_path = os.path.join(app.root_path,'static/user_pics',picture_name)
-  output_size = (150,150)
-  i = Image.open(formpic)
-  i.thumbnail(output_size)
-  i.save(pic_path)
-  return picture_name
+  pic_path = os.path.join(app.root_path,path,picture_name)
+  if output_size :
+    i = Image.open(formpic)
+    i.thumbnail(output_size)
+    i.save(pic_path)
+    return picture_name
+  else:
+    output_size=(150,150)
+    i = Image.open(formpic)
+    i.thumbnail(output_size)
+    i.save(pic_path)
+    return picture_name
+
 
 @app.route('/')
-@app.route('/home' ,methods=['POST','GET'])
+@app.route('/home',methods=['POST','GET'])
 def home():
+  lessons = Lesson.query.all()
+  courses = Course.query.all()
   if current_user.is_authenticated:
     img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-    return render_template('home.html' ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
+    return render_template_modal('home.html' ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
   else :
-    return render_template('home.html'  , courses=courses,lessons=lessons ,title="home")
+    return render_template('home.html', courses=courses,lessons=lessons ,title="home")
   
   
 #about
@@ -34,7 +47,7 @@ def home():
 def about():
   if current_user.is_authenticated:
     img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-    return render_template('about.html' ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
+    return render_template_modal('about.html' ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
   else :
     return render_template('about.html'  , courses=courses,lessons=lessons ,title="home")
 
@@ -78,15 +91,15 @@ def login():
 @app.route('/logout',methods=['GET','POST'])
 def logout():
   logout_user()
-  return redirect(url_for('home'))
+  return redirect(url_for('login'))
 
 
 
 @app.route("/dashboard",methods=['POST','GET'])
 @login_required
 def dashboard():
-  
-  return render_template('dashboard.html',title='Dashboard', active_tab=None)
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  return render_template('dashboard.html',title='Dashboard', img_file=img_file,active_tab=None)
 
 
 @app.route("/dashboard/profile",methods=['GET',"POST"])
@@ -115,17 +128,67 @@ def profile():
 @login_required
 def new_lesson():
   new_lesson_form = NewLessonForm()
-  if new_lesson_form.validate_on_submit():
+  new_course_form = NewCourseForm()
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  flag = session.pop('flag',False)
+  form = ''
+  if 'slug' in request.form:
+    form = 'new_lesson_form'
+    
+  elif 'description' in request.form:
+    
+    form = 'new_course_form'
+    
+  if form == "new_lesson_form" and new_lesson_form.validate_on_submit():
+    if new_lesson_form.thumbnail.data:
+      pic_file = save_pic(new_lesson_form.thumbnail.data, path='static/lesson_thumbnails',output_size=(250,300))
+    lesson_slug = str(new_lesson_form.slug.data).replace(" ", "-")
     course = new_lesson_form.course.data
-    lesson = Lesson(title = new_lesson_form.title.data,
-                    content = new_lesson_form.content.data,
-                    slug = new_lesson_form.slug.data,
-                    author = current_user,
-                    course_name = course)
+    lesson = Lesson(
+        title=new_lesson_form.title.data,
+        content=new_lesson_form.content.data,
+        slug=lesson_slug,
+        author=current_user,
+        course_name=course,
+        thumbnail=pic_file
+    )
+    
     db.session.add(lesson)
     db.session.commit()
-    flash(f'Lesson {new_lesson_form.title.data} has been Created','info')
-    return redirect(url_for("home"))
-  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-  return render_template('new_lesson.html',title='New Lesson', img_file = img_file, new_lesson_form = new_lesson_form ,active_tab='new_lesson')
+    flash(f'Lesson {new_lesson_form.title.data} has been Created','success')
+    return redirect(url_for("new_lesson"))
+  return render_template_modal(
+        "new_lesson.html",
+        title="New Lesson",
+        new_lesson_form=new_lesson_form,
+        active_tab="new_lesson",
+        modal=modal,
+        img_file=img_file
+    )
   
+@app.route('/dashboard/new_course',methods=['GET','POST'])
+@login_required
+def new_course():
+  new_course_form = NewCourseForm()
+  if new_course_form.validate_on_submit():
+      if new_course_form.icon.data:
+        pic_file = save_pic(new_course_form.icon.data,path='static/course_icon',output_size=(150,150))
+      course_title = str(new_course_form.title.data).replace(" ", "-")
+      course_description = new_course_form.description.data
+      soup = BeautifulSoup(course_description, 'html.parser')
+      course_description_text = soup.get_text()
+
+      course = Course(title=course_title,
+                      description=course_description_text,
+                      icon = pic_file)
+      db.session.add(course)
+      db.session.commit()
+      flash("New Course has been created!", "success")
+      return redirect(url_for("new_lesson"))
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  
+  return render_template('new_course.html',
+                        img_file=img_file,
+                        title='New course',
+                        new_course_form=new_course_form,
+                        active_tab="new_course")

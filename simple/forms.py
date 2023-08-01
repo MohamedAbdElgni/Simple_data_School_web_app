@@ -75,6 +75,17 @@ class NewLessonForm(FlaskForm):
   course = QuerySelectField("Course", query_factory=choice_query,get_label='title')
   title = StringField('Lesson Title', validators=[DataRequired(),Length(max=100)])
   slug = StringField('slug',render_kw={"placeholder":"Descriptive short version of your title. Seo Friendly"}, validators=[DataRequired(),Length(max=32)])
-  content = TextAreaField('Lesson Content',render_kw={"rows":"12"}, validators=[DataRequired()])
+  content = CKEditorField('Lesson Content',render_kw={"rows":"12"}, validators=[DataRequired()])
   thumbnail = FileField("Thumbnail",validators=[DataRequired(),FileAllowed(['jpg','png'])])
   submit = SubmitField("Lesson")
+  
+class NewCourseForm(FlaskForm):
+  title = StringField('Course Name',render_kw={"placeholder":"Enter your Course Title"},validators=[DataRequired(),Length(max=50)])
+  description = TextAreaField('Course description',render_kw={"placeholder":"Descriptive short version of your title. Seo Friendly"},validators=[DataRequired(),Length(max=150)])
+  icon = FileField('Icon',validators=[DataRequired(),FileAllowed(['jpg','png'])])
+  submit = SubmitField('Create')
+  def validate_title(self,title):
+      
+    course = Course.query.filter_by(title = title.data).first()
+    if course:
+      raise ValidationError("Course name Already exists! please choose a Course Name ")
