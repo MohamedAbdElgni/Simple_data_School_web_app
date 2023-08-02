@@ -1,90 +1,76 @@
 {%extends "layout.html"%} {%block content%}
-<section class="bg-light1">
-  <div class="container p-5">
-    <div class="row">
-      {% for lesson in course.lessons %} {% if lesson in course.lessons %}
-      <div class="col-12 col-md-6 col-lg-4 pb-4 d-flex align-items-lg-end">
-        <div class="card lesson">
-          <img
-            src="{{url_for('static', filename='lesson_thumbnails/'+lesson.thumbnail)}}"
-            class="card-img mb-0"
-          />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">
-              <a
-                class="text-decoration-none text-dark"
-                href="{{url_for('lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}"
-                >{{lesson.title}}</a>
-              
-            </h5>
-            <span>
-              <br />
-              By:
-              <img
-                class="article-img"
-                src="{{url_for('static', filename='user_pics/'+lesson.author.img_file)}}"
-                alt=""
-              />
-              <a href="#" class="link">{{lesson.author.username}}</a>
-            </span>
-            <br />
-            <span class="text-info">
-              On {{lesson.date_posted.strftime('%d-%m-%Y')}}</span
-            >
-          </div>
-        </div>
+<div class="container-fluid bg-secondary">
+  <div class="container">
+    <div class="row p-5">
+      <div class="col-6">
+        <img src="{{url_for('static', filename='course_icon'+course.icon)}}" alt="">
       </div>
-      {%else%}
-        {%print('False')%}
-
-        <div class="col-12 col-md-6 col-lg-4 pb-4 d-flex align-items-lg-end">
-          <div class="card lesson">
-              <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">
-                      <p class="text-center">No lessons in this course yet</p>
-                  </h5>
-              </div>
-          </div>
+      <div class="col-6">
+        <span class="lead text-light">{{course.description}}</span>
       </div>
-      <div class="alert alert-info" role="alert">
-        No lessons in this course yet
-      </div>
-      
-      
-      {%endif%} {% endfor %}
-
-      <section class="bg-ligh">
-        <div class="container p-5">
-          <h3 class="text-center text-secondary" id="learn">Courses</h3>
-          <div class="row">
-            {% for course_ in courses %}
-
-            <div
-              class="col-4 col-md-4 col-lg-3 pb-5 d-flex align-items-lg-end text-center m-auto"
-            >
-              <a
-                href="{{url_for('course',course_title=course_.title)}}"
-                class="text-decoration-none"
-              >
-                <div class="card-course bg-dark text-light">
-                  <div class="card-body text-center">
-                    <img
-                      src="{{url_for('static', filename='course_icon/'+course_.icon)}}"
-                      alt=""
-                      class="card-img w-25"
-                    />
-                    <h4 class="card-title mb-4">{{course_.title}}</h4>
-                    <div class="card-text">{{course_.description}}</div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
     </div>
   </div>
-</section>
+</div>
+{%if flag_lesson==1%}
+<section class="bg-light">
+  <div class="container p-5">
+      <div class="row mb-5 ">
+          
+      </div>
+      <div class="row">
+          {% for lesson in course.lessons %}
+          <div class="col-12 col-md-6 col-lg-4 pb-4 d-flex align-items-lg-end">
+              <div class="card lesson bg-dark bg-gradient ">
+                  <img src="{{url_for('static', filename='lesson_thumbnails/'+lesson.thumbnail)}}" class="card-img mb-0">
+                  <div class="card-body d-flex flex-column text-light">
+                      <h5 class="card-title">
+                          <a class="text-decoration-none text-light " href="{{url_for('lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}">{{lesson.title}}</a>
+                      </h5>
+                        <br>
+                        By: 
+                        <img class="article-img" src="{{url_for('static', filename='user_pics/'+lesson.author.img_file)}}" alt="">
+                        <a href="#" class="link">{{lesson.author.username}}</a>
+                        </span>
+                        <br>
+                              <span class="text-info "> On {{lesson.date_posted.strftime('%d-%m-%Y')}}</span>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
 
+      </div>
+  </div>
+</section>{%else%}
+<div class="alert alert-primary" role="alert">
+  <h4 class="alert-heading">No lessons yet in {{course.title}} course!</h4>
+  <p>Sorry, there are no lessons in this course yet. Please check back later.</p>
+  <hr>
+  <p class="mb-0">You can also check out other courses</p>
+  
+</div>{%endif%}
+<section class="bg-dark">
+  <div class="container p-5">
+      <h3 class="text-center text-secondary" id='learn'>Courses</h3>
+      <div class="row">
+          {% for course in courses %}
+          
+          
+          <div class="col-4 col-md-4 col-lg-3 pb-5 d-flex align-items-lg-end text-center m-auto ">
+            <a href="{{url_for('course',course_title=course.title)}}" class="text-decoration-none">
+                  <div class="card-course bg-dark text-light">
+                      <div class="card-body text-center">
+                          <img src="{{url_for('static', filename='course_icon/'+course.icon)}}" alt="" class="card-img w-25">
+                          <h4 class="card-title mb-4">
+                              {{course.title}}
+                          </h4>
+                          <div class='card-text'>{{course.description}}</div>
+                      </div>
+                  </div>
+              </a>
+          </div>
+          
+          {% endfor %}
+      </div>
+  </div>
+</section>
 {%endblock content%}

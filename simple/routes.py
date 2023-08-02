@@ -62,9 +62,9 @@ def home():
 def about():
   if current_user.is_authenticated:
     img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-    return render_template_modal('about.html' ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
+    return render_template_modal('about.html' ,img_file=img_file   ,title="home")
   else :
-    return render_template('about.html'  , courses=courses,lessons=lessons ,title="home")
+    return render_template('about.html'  ,title="home")
 
 #regfrom
 @app.route('/register',methods=['GET','POST'])
@@ -214,7 +214,7 @@ def new_course():
 
 
 @app.route("/<string:course>/<string:lesson_slug>")
-
+@login_required
 def lesson(lesson_slug,course):
   lesson = Lesson.query.filter_by(slug=lesson_slug).first()
   if lesson:
@@ -226,11 +226,16 @@ def lesson(lesson_slug,course):
   
   
 @app.route("/<string:course_title>")
+@login_required
 def course(course_title):
   course = Course.query.filter_by(title=course_title).first()
   course_id = course.id if course else None
   course = Course.query.get_or_404(course_id)
   courses = Course.query.all()
+  # this is to check if the course has lessons or not to help us in the jinja
+  flag_lesson = 0 if len(course.lessons) == 0 else 1
+  
+
   
   img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-  return render_template("course.html",courses=courses,title=course.title,course=course,img_file=img_file)
+  return render_template("course.html",flag_lesson=flag_lesson,courses=courses,title=course.title,course=course,img_file=img_file)
