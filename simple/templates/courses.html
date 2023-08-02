@@ -1,0 +1,38 @@
+{%extends "layout.html"%} {%block content%}
+<section class="bg-ligh">
+  <div class="container p-5">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4 text-Ingo">Our Courses </h1>
+        <p class="font-weight-normal">
+          we have <span class="badge bg-info" >{{courses|length}}</span> courses in our website 
+          and we are working on more courses and lessons.</p>
+      </div>
+    </div>
+    <br class="">
+    <div class="row">
+      {% for course in courses %}
+      <div
+        class="col-4 col-md-4 col-lg-3 pb-5 d-flex align-items-lg-end text-center m-auto"
+      >
+        <a
+          href="{{url_for('course',course_title=course.title)}}"
+          class="text-decoration-none">
+          <div class="card-course bg-dark text-light">
+            <div class="card-body text-center">
+              <img
+                src="{{url_for('static', filename='course_icon/'+course.icon)}}"
+                alt=""
+                class="card-img w-25"
+              />
+              <h4 class="card-title mb-4">{{course.title}}</h4>
+              <div class="card-text">{{course.description}}</div>
+            </div>
+          </div>
+        </a>
+      </div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+{%endblock content%}

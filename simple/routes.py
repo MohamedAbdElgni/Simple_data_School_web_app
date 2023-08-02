@@ -239,3 +239,11 @@ def course(course_title):
   
   img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
   return render_template("course.html",flag_lesson=flag_lesson,courses=courses,title=course.title,course=course,img_file=img_file)
+
+
+@app.route("/courses")
+@login_required
+def courses():
+  courses = Course.query.all()
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  return render_template("courses.html",title="Courses",courses=courses ,img_file=img_file)
