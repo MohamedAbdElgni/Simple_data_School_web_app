@@ -89,3 +89,8 @@ class NewCourseForm(FlaskForm):
     course = Course.query.filter_by(title = title.data).first()
     if course:
       raise ValidationError("Course name Already exists! please choose a Course Name ")
+    
+
+class LessonUpdateForm(NewLessonForm):
+  thumbnail = FileField("Thumbnail",validators=[FileAllowed(['jpg','png'])])
+  submit = SubmitField("Update")

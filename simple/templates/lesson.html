@@ -5,12 +5,8 @@
     <div class="row">
         <!-- article contents -->
         <div class="col-lg-8 col-md-12">
-            <div class="container pt-5">
-                <br>
-                <h2>{{lesson.title}}</h2>
-                <hr>
-                {{lesson.content | safe}}
-            </div>
+          {%block lesson%}
+          {% endblock lesson%}
             <!--  previous and next lesson -->
             <div class="row justify-content-md-center">
                 <div class="col-4">
@@ -24,7 +20,7 @@
                     </a>
                     {% endif %}
                 </div>
-                <div class="col-4">
+                <div class="col-6">
                     {% if next_lesson %}
                     <a href="{{url_for('lesson', lesson_slug=next_lesson.slug, course=next_lesson.course_name.title)}}">
                         <button class="btn btn-warning" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -33,7 +29,9 @@
                         </button>
                     </a>
                     {% endif %}
+                    
                 </div>
+                  
             </div>
         </div>
         <!-- sidebar -->

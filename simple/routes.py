@@ -1,6 +1,7 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, session, Markup
-
-from simple.forms import RegistrationForm, LoginForm, UpdateProfileForm, NewLessonForm, NewCourseForm
+from flask import Flask, render_template, redirect, url_for, flash, request, session, Markup, abort,send_from_directory
+from functools import wraps
+from flask_ckeditor import upload_fail, upload_success
+from simple.forms import RegistrationForm, LoginForm, UpdateProfileForm, NewLessonForm, NewCourseForm, LessonUpdateForm
 from simple.models import Lesson, User, Course
 from simple import app,bcrypt,db,modal
 from flask_login import login_user,current_user,logout_user,login_required
@@ -11,6 +12,20 @@ import os
 from PIL import Image
 from bs4 import BeautifulSoup
 
+
+def delete_pic(pic_name,path):
+  pic_path = os.path.join(app.root_path,path,pic_name)
+  try:
+    os.remove(pic_path)
+  except:
+    pass
+
+def add_img_file(f):
+  @wraps(f)
+  def decorated_function(*args, **kwargs):
+    img_file = url_for('static', filename=f"user_pics/{current_user.img_file}")
+    return f(img_file=img_file, *args, **kwargs)
+  return decorated_function
 
 def save_pic(formpic,path='static/user_pics',output_size=None):
   random_hex = secrets.token_hex(8)
@@ -43,7 +58,23 @@ def get_previous_next_lesson(lesson):
             break
     return previous_lesson, next_lesson
     
-      
+
+@app.route('/files/<path:filename>')
+def uploaded_files(filename):
+    path = os.path.join(app.root_path, 'static/media')
+    return send_from_directory(path, filename)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    extension = f.filename.split('.')[-1].lower()
+    if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+        return upload_fail(message='File extension not allowed!')
+    random_hex = secrets.token_hex(8)
+    image_name = random_hex+extension
+    f.save(os.path.join(app.root_path, 'static/media', image_name))
+    url = url_for('uploaded_files', filename=image_name)
+    return upload_success(url, filename=image_name)
 
 @app.route('/')
 @app.route('/home',methods=['POST','GET'])
@@ -222,7 +253,7 @@ def lesson(lesson_slug,course):
   lesson_id = lesson.id if lesson else None
   lesson = Lesson.query.get_or_404(lesson_id)
   img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-  return render_template("lesson.html",title=lesson.title,lesson=lesson,img_file=img_file,previous_lesson=previous_lesson,next_lesson=next_lesson)
+  return render_template("lesson_view.html",title=lesson.title,lesson=lesson,img_file=img_file,previous_lesson=previous_lesson,next_lesson=next_lesson)
   
   
 @app.route("/<string:course_title>")
@@ -247,3 +278,62 @@ def courses():
   courses = Course.query.all()
   img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
   return render_template("courses.html",title="Courses",courses=courses ,img_file=img_file)
+
+
+@app.route('/dashboard/user_lessons',methods=['GET','POST'])
+@login_required
+@add_img_file
+def user_lessons(img_file):
+  return render_template('user_lessons.html',img_file=img_file,title='Your Lessons', active_tab='user_lessons')
+
+
+
+@app.route("/<string:course>/<string:lesson_slug>/update" ,methods=['GET','POST'])
+@login_required
+def update_lesson(lesson_slug,course):
+  lesson = Lesson.query.filter_by(slug=lesson_slug).first()
+  if lesson:
+    previous_lesson, next_lesson = get_previous_next_lesson(lesson)
+  lesson_id = lesson.id if lesson else None
+  lesson = Lesson.query.get_or_404(lesson_id)
+  img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
+  if lesson.author != current_user:
+    abort(403)
+  form = LessonUpdateForm()
+  if form.validate_on_submit():
+    lesson.course_name = form.course.data
+    lesson.title = form.title.data
+    lesson.slug = (form.slug.data).replace(" ", "-")
+    lesson.content = form.content.data
+    if form.thumbnail.data:
+      #delete the old thumbnail function
+      delete_pic(lesson.thumbnail,path='static/lesson_thumbnails')
+      pic_file = save_pic(form.thumbnail.data, path='static/lesson_thumbnails',output_size=(250,300))
+      lesson.thumbnail = pic_file
+    db.session.commit()
+    
+    flash("Your lesson has been updated!", "success")
+    print(current_user.password)
+    return redirect(url_for("lesson", lesson_slug=lesson.slug,course=lesson.course_name.title))
+  elif request.method == "GET":
+    form.course.data = lesson.course_name.title
+    form.title.data = lesson.title
+    form.slug.data = lesson.slug
+    form.content.data = lesson.content
+  return render_template("update_lesson.html",title="Update | " +lesson.title,
+                        lesson=lesson,img_file=img_file,
+                        previous_lesson=previous_lesson,
+                        next_lesson=next_lesson,
+                        form = form)
+                        
+
+
+@app.route("/lesson/<lesson_id>/delete",methods=['POST'])
+def delete_lesson(lesson_id):
+  lesson = Lesson.query.get_or_404(lesson_id)
+  if lesson.author != current_user:
+    abort(403)
+  db.session.delete(lesson)
+  db.session.commit()
+  flash("Your lesson has been deleted!", "success") 
+  return redirect(url_for("user_lessons"))

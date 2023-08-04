@@ -1,25 +1,73 @@
-{% extends "layout.html" %}
-
-{%block content%}
+{% extends "layout.html" %} {%block content%}
 <div class="container my-5">
   <nav>
     <div class="nav nav-tabs" id="tablist">
-      <a class="link" href="/dashboard/profile"><button class="{{'nav-link active' if active_tab=='profile' else 'nav-link'}}" id="nav-profile-tab" data-bs-toggle="tap" type="button" aria-controls="nav-profile"
-      data-bs-target="#nav-profile" role="tab" aria-selected="true">Profile</button></a>
-      <a class="link" href="/dashboard/new_lesson"><button class="{{'nav-link active' if active_tab=='new_lesson' else 'nav-link'}}" id="nav-newlesson-tab" data-bs-toggle="tap" type="button" aria-controls="nav-newlesson"
-      data-bs-target="#nav-newlesson" role="tab" aria-selected="true">New lesson</button></a>
-      <a class="link" href="/dashboard/new_course"><button class="{{'nav-link active' if active_tab=='new_course' else 'nav-link'}}" id="nav-newcourse-tab" data-bs-toggle="tap" type="button" aria-controls="nav-newcourse"
-      data-bs-target="#nav-newcourse" role="tab" aria-selected="true">New course</button></a>
+      <a class="link" href="/dashboard/profile"
+        ><button
+          class="{{'nav-link active' if active_tab=='profile' else 'nav-link'}}"
+          id="nav-profile-tab"
+          data-bs-toggle="tap"
+          type="button"
+          aria-controls="nav-profile"
+          data-bs-target="#nav-profile"
+          role="tab"
+          aria-selected="true"
+        >
+          Profile
+        </button></a
+      >
+      <a class="link" href="/dashboard/new_lesson"
+        ><button
+          class="{{'nav-link active' if active_tab=='new_lesson' else 'nav-link'}}"
+          id="nav-newlesson-tab"
+          data-bs-toggle="tap"
+          type="button"
+          aria-controls="nav-newlesson"
+          data-bs-target="#nav-newlesson"
+          role="tab"
+          aria-selected="true"
+        >
+          New lesson
+        </button></a
+      >
+      <a class="link" href="/dashboard/new_course"
+        ><button
+          class="{{'nav-link active' if active_tab=='new_course' else 'nav-link'}}"
+          id="nav-newcourse-tab"
+          data-bs-toggle="tap"
+          type="button"
+          aria-controls="nav-newcourse"
+          data-bs-target="#nav-newcourse"
+          role="tab"
+          aria-selected="true"
+        >
+          New course
+        </button></a
+      >
+
+      <a class="link" href="/dashboard/user_lessons"
+        ><button
+          class="{{'nav-link active' if active_tab=='user_lessons' else 'nav-link'}}"
+          id="nav-user_lessons-tab"
+          data-bs-toggle="tap"
+          type="button"
+          aria-controls="nav-userlessons"
+          data-bs-target="#nav-userlessons"
+          role="tab"
+          aria-selected="true"
+        >
+          Your Lessons
+        </button></a
+      >
     </div>
   </nav>
   <div class="tab-content" id="nav-tabContent">
-        <!-- Profile -->
-        {%block profile %} {%endblock profile%}
-        {# new lesson #}
-        {%block new_lesson%}{%endblock new_lesson%}
-        {%block new_course%}{%endblock new_course%}
-    </div>
+    <!-- Profile -->
+    {%block profile %} {%endblock profile%} {# new lesson #} 
+    {%block new_lesson%}{%endblock new_lesson%}
+    {%block new_course%}{%endblock new_course%}
+    {%block user_lessons%}{%endblock user_lessons%}
+  </div>
 </div>
-
 
 {%endblock content%}

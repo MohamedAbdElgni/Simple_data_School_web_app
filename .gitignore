@@ -1,2 +1,8 @@
 *.venv
 *.db
+
+
+#secret files
+
+*.env
+*.key

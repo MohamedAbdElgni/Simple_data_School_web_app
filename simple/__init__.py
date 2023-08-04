@@ -6,14 +6,17 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_ckeditor import CKEditor
 from flask_modals import Modal
-
+import os 
 
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '00b45e9801907419b5c664e2dfd58f9c2a6a9c859195bcba223aa06150edde23'
+#will be hidden in the future DO NOT FORGET'00b45e9801907419b5c664e2dfd58f9c2a6a9c859195bcba223aa06150emme23'
+app.config['SECRET_KEY'] = open('flaskapp.venv/.key','r').read()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///simple.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['CKEDITOR_ENABLE_CODESNIPPET'] = True
+app.config['CKEDITOR_FILE_UPLOADER'] = 'upload'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 migrate = Migrate(app=app,db=db)
@@ -27,3 +30,5 @@ modal = Modal(app)
 
 
 from simple import routes 
+
+# mm is dd in the last sesecsecsec

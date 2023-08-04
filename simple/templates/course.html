@@ -1,12 +1,17 @@
 {%extends "layout.html"%} {%block content%}
-<div class="container-fluid bg-secondary">
+<div class=" container-fluid bg-secondary text-info font-weight-bold">
   <div class="container">
     <div class="row p-5">
       <div class="col-6">
         <img class="rounded-circle" src="{{url_for('static', filename='course_icon/'+course.icon)}}" alt="">
       </div>
-      <div class="col-6">
-        <span class="lead text-light">{{course.description}}</span>
+      <div class="col-6 ">
+        <h2 class="lead  text-light">{{course.description}}</h2>
+        <p class="alert-heading ">
+          {{course.title}} Course with 
+          <span class="badge bg-success p-1 " >{{course.lessons|length}}</span> 
+          lessons in it.</p>
+        
       </div>
     </div>
   </div>
@@ -24,7 +29,7 @@
                   <img src="{{url_for('static', filename='lesson_thumbnails/'+lesson.thumbnail)}}" class="card-img mb-0">
                   <div class="card-body d-flex flex-column text-light">
                       <h5 class="card-title">
-                          <a class="text-decoration-none text-light " href="{{url_for('lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}">{{lesson.title}}</a>
+                          <a class="text-decoration-none card-link  " href="{{url_for('lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}">{{lesson.title}}</a>
                       </h5>
                         <br>
                         By: 
