@@ -4,7 +4,8 @@
   
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   
   {%if title%}
   <title>Simple Data School-{{title}}</title>
@@ -43,8 +44,9 @@
                 {% endif %}
             </ul>
             <!-- User Links -->
+            
             <ul class="navbar-nav ms-auto">
-                {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated %}
                     <div class="dropdown">
                         <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             My Account
@@ -55,6 +57,7 @@
                             <li><a class="dropdown-item" href="{{url_for('logout')}}">Logout</a></li>
                         </ul>
                     </div>
+                    
                 {% else %}
                     <li class="nav-item">
                         <a href="{{url_for('register')}}" class="nav-link">Register</a>
@@ -67,6 +70,17 @@
         </div>
     </div>
 </nav>
+{% if current_user.is_authenticated %}
+                    <!-- Chat Bot section -->
+                    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js?v=1"></script>
+                    <df-messenger
+                      df-cx="true"
+                      location="us-central1"
+                      chat-title="MyChatBot-1"
+                      agent-id="452d297a-446c-46b7-9ccb-5f24a93d3c16"
+                      language-code="en"></df-messenger>
+                    <!--End Chat Bot section -->
+                    {% endif %}
 
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -81,10 +95,9 @@
   {% endif %}
   {% endwith %}
   {% block content%} {% endblock content%}
-  
 
-  <footer class="bg-dark mt-auto">
-      <div class="container p-3">
+  <footer class="bg-secondary mt-auto pt-3 mt-3">
+      <div class="container pt-3">
           <div class="row text-center text-white">
               <div class="col-md-12 col-lg-4 pb-2">
                   <h4 class="text-center text-decoration-underline">Quick Links</h4>

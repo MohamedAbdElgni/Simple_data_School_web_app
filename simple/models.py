@@ -1,18 +1,14 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from simple import db, login_manager
-
+from simple import db, login_manager,app
+from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask_login import UserMixin
 
 #essintial decorator for the login ext
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
-
-
-
-
 
 class User(db.Model,UserMixin):
   id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +21,24 @@ class User(db.Model,UserMixin):
   lesson = db.relationship('Lesson',backref='author',lazy=True)
   bio = db.Column(db.Text,nullable=True)
   
+  def get_reset_token(self):
+    """ this function will generate a token for the user to reset his password    
+    Returns:
+        serialized token
+    """
+    # this is the token that will be sent to the user to reset his password
+    s = Serializer(app.config['SECRET_KEY'], salt='pw-reset')
+    return s.dumps({'user_id':self.id})
+  
+  
+  @staticmethod
+  def verify_reset_token(token ,age=3600):
+    s = Serializer(app.config['SECRET_KEY'], salt='pw-reset')
+    try:
+      user_id = s.loads(token,max_age=age)['user_id']
+    except:
+      return None
+    return User.query.get(user_id)
   
   def __repr__(self):
     return f"'{self.id}','{self.fname}','{self.lname}','{self.username}','{self.email}','{self.img_file}'"

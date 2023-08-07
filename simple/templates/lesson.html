@@ -51,7 +51,8 @@
           </a>  
             <br>
             <!-- list of lessons in this course -->
-            <ul class="list-group mt-3 " style="display:inline-block">
+            <h5 class="mt-4">Course Lessons</h5>
+            <ul class="list-group list-group-lg mt-3  ">
                 {% for lsn in lesson.course_name.lessons %}
                 {% if lsn.title == lesson.title %}
                 <li class="list-group-item border active" aria-current="true">

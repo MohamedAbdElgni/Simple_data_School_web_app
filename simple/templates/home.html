@@ -75,18 +75,19 @@
     <div class="container p-5">
         <h3 class="text-center text-secondary" id='learn'>Courses</h3>
         <div class="row">
-            {% for course in courses %}
+            {% for course in courses_limit.items %}
             
             
-            <div class="col-4 col-md-4 col-lg-3 pb-5 d-flex align-items-lg-end text-center m-auto ">
+            <div class="col-sm-12 col-md-6 col-lg-4 p-3 d-flex align-items-stretch ">
               <a href="{{url_for('course',course_title=course.title)}}" class="text-decoration-none">
-                    <div class="card-course bg-dark text-light">
+                    <div class="card card-course bg-dark text-light h-100">
                         <div class="card-body text-center">
                             <img src="{{url_for('static', filename='course_icon/'+course.icon)}}" alt="" class="card-img w-25">
                             <h4 class="card-title mb-4">
                                 {{course.title}}
+                                
                             </h4>
-                            <div class='card-text'>{{course.description}}</div>
+                            <div class='card-text'>{{course.description}} with <span class=" badge bg-warning p-1 " >{{course.lessons|length}}</span> Lessons</div>
                         </div>
                     </div>
                 </a>
@@ -95,6 +96,9 @@
             {% endfor %}
         </div>
     </div>
+    <div class="col-12 p-2 text-center ">
+        <a href="{{url_for('courses')}}" class="btn btn-success">View All Courses</a>
+        </div>
 </section>
 <!-- Lessons -->
 <section class="bg-dark">
@@ -113,7 +117,7 @@
                         <h5 class="card-title">
                             <a class="text-decoration-none text-dark" href="{{url_for('lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}">{{lesson.title}}</a>
                         </h5>
-                        <span class="card-text mb-0 ">Course:<a class="text-decoration-none" href="#">{{lesson.course_name.title}}</a> </span>
+                        <span class="card-text mb-0 ">Course:<a class="text-decoration-none" href="{{url_for('course',course_title=lesson.course_name.title)}}">{{lesson.course_name.title}}</a> </span>
                             
                           
                       
@@ -121,7 +125,7 @@
                           <br>
                           By: 
                           <img class="article-img" src="{{url_for('static', filename='user_pics/'+lesson.author.img_file)}}" alt="">
-                          <a href="#" class="link">{{lesson.author.username}}</a>
+                          <a href="{{url_for('author', username=lesson.author.username,page=page_num)}}" class="link">{{lesson.author.username}}</a>
                           </span>
                           <br>
                                 <span class="text-info "> On {{lesson.date_posted.strftime('%d-%m-%Y')}}</span>

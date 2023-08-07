@@ -140,3 +140,32 @@ body::before {
   width: 50px ;
 
 }
+
+
+.card-course {
+  cursor: pointer;
+  border-radius: 25px;
+
+}
+.card-course :hover {
+  transform: scale(1.1);
+
+}
+
+
+
+.card-course .card-img {
+  width: 50px; /* Ensure the image doesn't exceed the card width */
+  height: 60px; /* Adjust the max height as per your preference */
+  align-self: center;
+  object-fit: cover; /* Preserve the image aspect ratio while filling the container */
+
+}
+
+
+.pagination{
+  display: flex; 
+  justify-content:flex-end;
+  
+}
+

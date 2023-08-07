@@ -1,16 +1,28 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, session, Markup, abort,send_from_directory
 from functools import wraps
 from flask_ckeditor import upload_fail, upload_success
-from simple.forms import RegistrationForm, LoginForm, UpdateProfileForm, NewLessonForm, NewCourseForm, LessonUpdateForm
+from simple.forms import RegistrationForm, LoginForm, UpdateProfileForm, NewLessonForm, NewCourseForm, LessonUpdateForm, RequestResetForm, ResetPasswordForm
 from simple.models import Lesson, User, Course
-from simple import app,bcrypt,db,modal
+from simple import app,bcrypt,db,modal,mail
 from flask_login import login_user,current_user,logout_user,login_required
 from flask_modals import render_template_modal
-
+from flask_mail import Message
 import secrets
 import os
 from PIL import Image
 from bs4 import BeautifulSoup
+
+def send_reset_email(user):
+  token = user.get_reset_token()
+  msg = Message('Simple Data School Password Reset',
+                sender = "mohamed.pay.878@gmail.com",
+                recipients=[user.email],
+                body = f"""To Reset your password, Visit the following Link
+                {url_for('reset_password', token = token,_external=True)}
+                If you did not make this, please ignore this Email"""
+                )
+  mail.send(msg)
+  
 
 
 def delete_pic(pic_name,path):
@@ -79,13 +91,14 @@ def upload():
 @app.route('/')
 @app.route('/home',methods=['POST','GET'])
 def home():
-  lessons = Lesson.query.all()
+  lessons = Lesson.query.order_by(Lesson.date_posted.desc()).paginate(page=1,per_page=3)
   courses = Course.query.all()
+  courses_limit = Course.query.paginate(page=1,per_page=6)
   if current_user.is_authenticated:
     img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-    return render_template_modal('home.html' ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
+    return render_template_modal('home.html',courses_limit=courses_limit ,img_file=img_file , courses=courses,lessons=lessons ,title="home")
   else :
-    return render_template('home.html', courses=courses,lessons=lessons ,title="home")
+    return render_template('home.html', courses_limit=courses_limit, courses=courses,lessons=lessons ,title="home")
   
   
 #about
@@ -263,21 +276,30 @@ def course(course_title):
   course_id = course.id if course else None
   course = Course.query.get_or_404(course_id)
   courses = Course.query.all()
+  courses_limit = Course.query.paginate(page=1,per_page=6)
+  page = request.args.get('page',1,type=int)
+  lessons = Lesson.query.filter_by(course_id=course_id).paginate(page=page,per_page=3)
   # this is to check if the course has lessons or not to help us in the jinja
   flag_lesson = 0 if len(course.lessons) == 0 else 1
-  
-
-  
   img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-  return render_template("course.html",flag_lesson=flag_lesson,courses=courses,title=course.title,course=course,img_file=img_file)
+  return render_template("course.html",
+                        lessons=lessons,
+                        flag_lesson=flag_lesson,
+                        courses_limit=courses_limit,
+                        courses=courses,
+                        title=course.title,
+                        course=course,
+                        img_file=img_file)
 
 
 @app.route("/courses")
 @login_required
 def courses():
-  courses = Course.query.all()
+  course_count = Course.query.all()
+  page = request.args.get('page',1,type=int)
+  courses = Course.query.paginate(page=page,per_page=6)
   img_file = url_for('static',filename = f"user_pics/{current_user.img_file}")
-  return render_template("courses.html",title="Courses",courses=courses ,img_file=img_file)
+  return render_template("courses.html",title="Courses",courses=courses ,img_file=img_file,course_count=course_count)
 
 
 @app.route('/dashboard/user_lessons',methods=['GET','POST'])
@@ -337,3 +359,48 @@ def delete_lesson(lesson_id):
   db.session.commit()
   flash("Your lesson has been deleted!", "success") 
   return redirect(url_for("user_lessons"))
+
+
+@app.route("/author/<string:username>",methods=['GET'])
+@login_required
+@add_img_file
+def author( img_file,username):
+  user = User.query.filter_by(username=username).first_or_404()
+  page = request.args.get('page',1,type=int)
+  lessons = Lesson.query.filter_by(author=user).order_by(Lesson.date_posted.desc()).paginate(page=page,per_page=3)
+  return render_template('author.html', img_file=img_file,lessons=lessons, user = user)
+
+
+
+@app.route('/reset_password',methods=['GET','POST'])
+def reset_request():
+  if current_user.is_authenticated:
+    return redirect(url_for('home'))
+  form = RequestResetForm()
+  if form.validate_on_submit():
+    user = User.query.filter_by(email=form.email.data).first()
+    if user :
+      send_reset_email(user)
+    flash("Message sent successfully", category="success")
+    return redirect(url_for('login'))
+  return render_template('reset_request.html',title='Reset Password', form = form)
+
+
+@app.route('/reset_password/<token>',methods=['GET','POST'])
+def reset_password(token):
+  if current_user.is_authenticated:
+    return redirect(url_for('home'))
+  user = User.verify_reset_token(token)
+  if not user:
+    flash("The Token Is Invalid Or Expired",'warning')
+    return redirect(url_for('reset_request'))
+  form = ResetPasswordForm()
+  if form.validate_on_submit():
+    hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+    user.password = hashed_password
+    db.session.commit()
+    flash(f"Your Password now updated. you Can log in", category="success")
+    return redirect(url_for("login"))
+  return render_template('reset_password.html',title='Reset Password', form = form)
+
+    
