@@ -16,7 +16,6 @@ app = Flask(__name__)
 #will be hidden in the future DO NOT FORGET'00b45e9801907419b5c664e2dfd58f9c2a6a9c859195bcba223aa06150emme23'
 
 app.config['SECRET_KEY'] = open('flaskapp.venv/app_sec.key','r').read()
-print(app.config['SECRET_KEY'])
 # this is the database configuration for the flask sqlalchemy ext
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///simple.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
