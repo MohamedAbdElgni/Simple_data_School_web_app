@@ -47,7 +47,7 @@
         <div class="form-group pt-5 ">
           {{form.submit(class='btn btn-outline-info ')}}
           <span><strong>OR</strong></span>
-          <button class="btn btn-success pl-5" onclick="signInWithGoogle()">Login with Google</button>
+          <a href="#" class="btn btn-success pl-5" >Login with Google</a>
         </div>
 
         <div class="form-check">
@@ -58,12 +58,12 @@
 
     </form>
     <small class="text-muted ml-2">
-      <a class="link" href="{{url_for('reset_request')}}">Forgot Password</a>
+      <a class="link" href="{{url_for('users.reset_request')}}">Forgot Password</a>
     </small>
     <div class="border-top">
       <small class="text-muted pt-3"></small>
       Don't have account?!
-      <a href="{{url_for('register')}}" class="pt-3">Register</a>
+      <a href="{{url_for('users.register')}}" class="pt-3">Register</a>
     </div>
     
   </div>

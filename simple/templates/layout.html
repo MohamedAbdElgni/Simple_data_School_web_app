@@ -24,17 +24,17 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
     <div class="container">
-        <a href="{{url_for('home')}}" class="navbar-brand">Simple Data School</a>
+        <a href="{{url_for('main.home')}}" class="navbar-brand">Simple Data School</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a href="{{url_for('about')}}" class="nav-link">About</a>
+                    <a href="{{url_for('main.about')}}" class="nav-link">About</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('courses')}}" class="nav-link">Start Learning</a>
+                    <a href="{{url_for('courses.courses')}}" class="nav-link">Start Learning</a>
                 </li>
                 {% if current_user.is_authenticated %}
                     <li class="nav-item d-flex align-items-center">
@@ -52,18 +52,18 @@
                             My Account
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{url_for('home')}}">Home</a></li>
-                            <li><a class="dropdown-item" href="{{url_for('dashboard')}}">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{{url_for('logout')}}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('main.home')}}">Home</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('users.dashboard')}}">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('users.logout')}}">Logout</a></li>
                         </ul>
                     </div>
                     
                 {% else %}
                     <li class="nav-item">
-                        <a href="{{url_for('register')}}" class="nav-link">Register</a>
+                        <a href="{{url_for('users.register')}}" class="nav-link">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url_for('login')}}" class="nav-link">Login</a>
+                        <a href="{{url_for('users.login')}}" class="nav-link">Login</a>
                     </li>
                 {% endif %}
             </ul>

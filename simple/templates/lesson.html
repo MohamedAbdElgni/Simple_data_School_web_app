@@ -12,7 +12,7 @@
                 <div class="col-4">
                     {% if previous_lesson %}
                     <a
-                        href="{{url_for('lesson', lesson_slug=previous_lesson.slug, course=previous_lesson.course_name.title)}}">
+                        href="{{url_for('lessons.lesson', lesson_slug=previous_lesson.slug, course=previous_lesson.course_name.title)}}">
                         <button class="btn btn-warning" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="{{previous_lesson.title}}">
                             &lt&lt&lt Previous Lesson
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-6">
                     {% if next_lesson %}
-                    <a href="{{url_for('lesson', lesson_slug=next_lesson.slug, course=next_lesson.course_name.title)}}">
+                    <a href="{{url_for('lessons.lesson', lesson_slug=next_lesson.slug, course=next_lesson.course_name.title)}}">
                         <button class="btn btn-warning" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="{{next_lesson.title}}">
                             &gt&gt&gt Next Lesson
@@ -46,7 +46,7 @@
             </div>
             <!-- course icon -->
             
-          <a class="text-decoration-none" href="{{url_for('course',course_title=lesson.course_name.title)}}" ><img class="course-imge-dash article-img rounded-circle " src="{{url_for('static', filename='course_icon/'+lesson.course_name.icon)}}" alt="">
+          <a class="text-decoration-none" href="{{url_for('courses.course',course_title=lesson.course_name.title)}}" ><img class="course-imge-dash article-img rounded-circle " src="{{url_for('static', filename='course_icon/'+lesson.course_name.icon)}}" alt="">
           <span >{{lesson.course_name.title}} Course</span>
           </a>  
             <br>
@@ -57,12 +57,12 @@
                 {% if lsn.title == lesson.title %}
                 <li class="list-group-item border active" aria-current="true">
                     <a class="link text-light"
-                        href="{{url_for('lesson', lesson_slug=lsn.slug, course=lsn.course_name.title)}}">{{lsn.title}}</a>
+                        href="{{url_for('lessons.lesson', lesson_slug=lsn.slug, course=lsn.course_name.title)}}">{{lsn.title}}</a>
                 </li>
                 {% else %}
                 <li class="list-group-item border" aria-current="false">
                     <a class="link text-dark"
-                        href="{{url_for('lesson', lesson_slug=lsn.slug, course=lsn.course_name.title)}}">{{lsn.title}}</a>
+                        href="{{url_for('lessons.lesson', lesson_slug=lsn.slug, course=lsn.course_name.title)}}">{{lsn.title}}</a>
                 </li>
                 {% endif %}
                 {% endfor %}

@@ -26,10 +26,10 @@
                   <img src="{{url_for('static', filename='lesson_thumbnails/'+lesson.thumbnail)}}" class="card-img mb-0">
                   <div class="card-body d-flex flex-column text-light">
                       <h5 class="card-title">
-                          <a class="text-decoration-none card-link  " href="{{url_for('lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}">{{lesson.title}}</a>
+                          <a class="text-decoration-none card-link  " href="{{url_for('lessons.lesson',lesson_slug=lesson.slug,course=lesson.course_name.title)}}">{{lesson.title}}</a>
                       </h5>
                         <br>
-                        <p class="card-text mb-0"> In: <a href="{{url_for('course',course_title=lesson.course_name.title)}}"> {{(lesson.course_name.title).title()}} Course</a></p>
+                        <p class="card-text mb-0"> In: <a href="{{url_for('courses.course',course_title=lesson.course_name.title)}}"> {{(lesson.course_name.title).title()}} Course</a></p>
                         
                         
                         <br>
