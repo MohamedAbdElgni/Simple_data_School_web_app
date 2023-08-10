@@ -6,10 +6,10 @@ from simple import mail
 
 def send_reset_email(user):
     token = user.get_reset_token()
+    
     msg = Message(
         "Simple Data School Password Reset",
         sender="mohamed.pay.878@gmail.com",
-        print(f"sending email in progress!!!!!! to {user.email}")
         recipients=[user.email],
         body=f"""To Reset your password, Visit the following Link
                 {url_for('users.reset_password', token = token,_external=True)}
