@@ -41,10 +41,11 @@ def create_app(config_class=Config):
     from simple.users.routes import users # pylint: disable=wrong-import-position
     from simple.lessons.routes import lessons # pylint: disable=wrong-import-position
     from simple.courses.routes import courses_bp # pylint: disable=wrong-import-position
-    
+    from simple.errors.handlers import errors # pylint: disable=wrong-import-position
     app.register_blueprint(main)
     app.register_blueprint(users)
     app.register_blueprint(lessons)
     app.register_blueprint(courses_bp)
+    app.register_blueprint(errors)
     
     return app

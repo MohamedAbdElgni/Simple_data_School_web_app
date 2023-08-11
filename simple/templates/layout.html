@@ -38,7 +38,7 @@
                 </li>
                 {% if current_user.is_authenticated %}
                     <li class="nav-item d-flex align-items-center">
-                        <img class="rounded-circle user-img-small border border-2 border-success me-2 custom-img-size" src="{{img_file}}" alt="">
+                        <img class="rounded-circle user-img-small border border-2 border-success me-2 custom-img-size" src="{{ url_for('static', filename='user_pics/' + current_user.img_file) }}" alt="">
                         <a class="nav-link">{{ current_user.username }}</a>
                     </li>
                 {% endif %}
