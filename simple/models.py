@@ -23,11 +23,6 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text, nullable=True)
 
     def get_reset_token(self):
-        """this function will generate a token for the user to reset his password
-        Returns:
-            serialized token
-        """
-        # this is the token that will be sent to the user to reset his password
         s = Serializer(current_app.config["SECRET_KEY"], salt="pw-reset")
         return s.dumps({"user_id": self.id})
 
@@ -36,7 +31,7 @@ class User(db.Model, UserMixin):
         s = Serializer(current_app.config["SECRET_KEY"], salt="pw-reset")
         try:
             user_id = s.loads(token, max_age=age)["user_id"]
-        except:
+        except :
             return None
         return User.query.get(user_id)
 

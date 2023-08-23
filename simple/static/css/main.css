@@ -1,3 +1,7 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 body::before {
   display: block;
   content: '';
@@ -162,10 +166,39 @@ body::before {
 
 }
 
+/* change the nav link on hover to white */
+.nav-link:hover{
+  color: green;
+}
 
-.pagination{
-  display: flex; 
-  justify-content:flex-end;
-  
+.type {
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: .15em solid orange;
+  width: 0;
+  animation: typing 10s steps(40, end) infinite, blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  0%, 100% {
+    width: 0;
+  }
+  5%, 90% {
+    width: 60%;
+
+  }
+  95%, 100% {
+    width: 60%;
+    animation-delay: 2s; /* Pause for 2 seconds at the end */
+  }
+}
+
+@keyframes blink-caret {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
 }
 

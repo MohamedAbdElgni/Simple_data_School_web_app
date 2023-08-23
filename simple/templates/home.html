@@ -7,7 +7,7 @@
     <div class="container">
         <div class="d-sm-flex align-items-center justify-content-between">
             <div>
-                <h1 class="mb-10">Future  <span class="text-warning"> With US </span></h1>
+                <h1 class="mb-10 type">Future  <span class="text-warning"> With US </span></h1>
                 <h3 class="my-4">
                     <span class="text-success ">Learn</span> Data Science and AI in a simple way
                     <br>
@@ -27,7 +27,7 @@
     </div>
 </section>
 <!-- Social Media -->
-<section class="bg-primary text-light p-5">
+<section class="bg-success text-light p-5">
     <div class="container">
         <div class="d-md-flex justify-content-between align-items-center">
             <h3 class="mb-3 text-center">Join Our Community</h3>
@@ -78,7 +78,7 @@
             {% for course in courses_limit.items %}
             
             
-            <div class="col-sm-12 col-md-6 col-lg-4 p-3 d-flex align-items-stretch ">
+            <div class="col-sm-12 col-md-6 col-lg-4 p-3 d-flex align-items-stretch justify-content-center">
               <a href="{{url_for('courses.course',course_title=course.title)}}" class="text-decoration-none">
                     <div class="card card-course bg-dark text-light h-100">
                         <div class="card-body text-center">

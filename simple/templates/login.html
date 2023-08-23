@@ -28,39 +28,41 @@
 
         <div class="form-group">
           {{form.password.label(class='form-control-label')}}
+          
           {% if form.password.errors%}
-          {{ form.password(class='form-control form-control-lg is-invalid')}}
+          {{ form.password(class='form-control form-control-lg is-invalid', id='password')}}
+          
             <div class="invalid-feedback">
             {% for error in form.password.errors%}
             <span>{{error}}</span>
             {%endfor%}
             </div>
             {%else%}
-            {{form.password(class='form-control form-control-lg')}}
-            
+            {{form.password(class='form-control form-control-lg',id='password')}}
+            <input class="pt-3" type="checkbox" onclick="passfunc()">Show Password
               
           {% endif %}
           
         </div>
 
         
-        <div class="form-group pt-5 ">
+        <div class="form-group pt-3 ">
           {{form.submit(class='btn btn-outline-info ')}}
           <span><strong>OR</strong></span>
           <a href="#" class="btn btn-success pl-5" >Login with Google</a>
         </div>
 
-        <div class="form-check">
+        <div class="form-check pt-3">
           {{form.remember_me(class='form-check-input')}}
           {{form.remember_me.label(class='form-check-input-label')}}
         </div>
       </fieldset>
 
     </form>
-    <small class="text-muted ml-2">
+    <small class="text-muted ml-2 pt-3">
       <a class="link" href="{{url_for('users.reset_request')}}">Forgot Password</a>
     </small>
-    <div class="border-top">
+    <div class="border-top pt-3">
       <small class="text-muted pt-3"></small>
       Don't have account?!
       <a href="{{url_for('users.register')}}" class="pt-3">Register</a>

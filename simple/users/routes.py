@@ -122,7 +122,7 @@ def author(img_file, username):
     return render_template("author.html", img_file=img_file, lessons=lessons, user=user)
 
 
-@users.route("/reset_password", methods=["GET", "POST"])
+@users.route("/reset_password", methods=["POST", "GET"])
 def reset_request():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
@@ -130,14 +130,14 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            print("sending email in progress!!!!!!")
+            print(user.email)
             send_reset_email(user)
         flash("Message sent successfully", category="success")
         return redirect(url_for("users.login"))
     return render_template("reset_request.html", title="Reset Password", form=form)
 
 
-@users.route("/reset_password/<token>", methods=["GET", "POST"])
+@users.route("/reset_password/<token>", methods=["POST", "GET"])
 def reset_password(token: any):
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))

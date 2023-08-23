@@ -16,4 +16,11 @@
 //     }, 1000); // 1000 milliseconds = 1 second (duration of the fadeOut animation)
 //   }, 4000); // 4000 milliseconds = 4 seconds
 // });
-
+function passfunc() {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  }

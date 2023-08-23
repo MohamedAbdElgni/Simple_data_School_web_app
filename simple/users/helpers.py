@@ -1,8 +1,8 @@
 from functools import wraps
 from flask_login import current_user
 from flask_mail import Message
-from flask import url_for,current_app
 from simple import mail
+from flask import url_for, current_app
 
 def send_reset_email(user):
     token = user.get_reset_token()
@@ -45,9 +45,8 @@ def send_reset_email(user):
 
     mail.send(msg)
 
-
-
-
+    
+    
 def add_img_file(fu_nc):
     @wraps(fu_nc)
     def decorated_function(*args, **kwargs):

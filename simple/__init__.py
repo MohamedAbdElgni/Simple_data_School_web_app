@@ -29,7 +29,7 @@ def create_app(config_class=Config):
     """This function is used to create the app instance , it is used by the flask shell to create the app instance
     """
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
