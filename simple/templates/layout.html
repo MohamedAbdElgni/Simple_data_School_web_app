@@ -1,146 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  
-  {%if title%}
-  <title>Simple Data School-{{title}}</title>
-  {%else%}
-  <title>Simple Data School</title>
-  {%endif%}"
-<link rel='stylesheet' type="text/css" href="{{url_for('static',filename='css/bootstrap.min.css')}}" >
-<script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
-<link rel='stylesheet' type="text/css" href="{{url_for('static',filename='css/main.css')}}">
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-{{ckeditor.load_code_theme()}}
+    {%if title%}
+    <title>Simple Data School-{{title}}</title>
+    {%else%}
+    <title>Simple Data School</title>
+    {%endif%}"
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static',filename='css/bootstrap.min.css')}}"
+    />
+    <script
+      type="text/javascript"
+      src="{{url_for('static',filename='js/bootstrap.min.js')}}"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static',filename='css/main.css')}}"
+    />
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
-</head>
-<body class="d-flex flex-column min-vh-100">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">navbar navbar-dark bg-primary
-    <div class="container">
-        <a href="{{url_for('main.home')}}" class="navbar-brand">Simple Data School</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-            <span class="navbar-toggler-icon"></span>
+    {{ckeditor.load_code_theme()}}
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
+      navbar navbar-dark bg-primary
+      <div class="container">
+        <a href="{{url_for('main.home')}}" class="navbar-brand"
+          >Simple Data School</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navmenu"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navmenu">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a href="{{url_for('main.about')}}" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url_for('courses.courses')}}" class="nav-link">Start Learning</a>
-                </li>
-                <!-- Search form -->
-                <!-- <li class="nav-item">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="{{url_for('main.about')}}" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{url_for('courses.courses')}}" class="nav-link"
+                >Start Learning</a
+              >
+            </li>
+            <!-- Search form -->
+            <!-- <li class="nav-item">
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </li> -->
-                {% if current_user.is_authenticated %}
-                    <li class="nav-item d-flex align-items-center ">
-                        <img class="rounded-circle user-img-small border border-2 border-success me-2 custom-img-size" src="{{ url_for('static', filename='user_pics/' + current_user.img_file) }}" alt="">
-                        <a href="{{url_for('users.dashboard')}}" class="nav-link ">{{ current_user.username }}</a>
-                    
-                    </li>
-                   
-                    
-                {% endif %}
-            </ul>
-            <!-- User Links -->
+            {% if current_user.is_authenticated %}
             
-            <ul class="navbar-nav ms-auto">
-                    {% if current_user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            My Account
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{url_for('main.home')}}">Home</a></li>
-                            <li><a class="dropdown-item" href="{{url_for('users.dashboard')}}">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{{url_for('users.logout')}}">Logout</a></li>
-                        </ul>
-                    </div>
-                    
-                {% else %}
-                    <li class="nav-item">
-                        <a href="{{url_for('users.register')}}" class="nav-link">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url_for('users.login')}}" class="nav-link">Login</a>
-                    </li>
-                {% endif %}
-            </ul>
+            <li class="nav-item d-flex align-items-center" id="user-im-2023">
+                <div class="custom-img-container"> 
+              <img
+                class=" me-2 custom-img-size"
+                src="{{ url_for('static', filename='user_pics/' + current_user.img_file) }}"
+                alt=""
+              />
+              <div class="gradient-border"></div>
+                </div>
+            
+              <a href="{{url_for('users.dashboard')}}" class="nav-link"
+                >{{ current_user.username }}</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+          <!-- User Links -->
+
+          <ul class="navbar-nav ms-auto">
+            {% if current_user.is_authenticated %}
+            <div class="dropdown">
+              <button
+                class="btn btn-danger dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                My Account
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{{url_for('main.home')}}"
+                    >Home</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{url_for('users.dashboard')}}"
+                    >Dashboard</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{url_for('users.logout')}}"
+                    >Logout</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            {% else %}
+            <li class="nav-item">
+              <a href="{{url_for('users.register')}}" class="nav-link"
+                >Register</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="{{url_for('users.login')}}" class="nav-link">Login</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
-    </div>
-</nav>
-{% if current_user.is_authenticated %}
-                    <!-- Chat Bot section -->
-                    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js?v=1"></script>
-                    <df-messenger
-                      df-cx="true"
-                      location="us-central1"
-                      chat-title="MyChatBot-1"
-                      agent-id="452d297a-446c-46b7-9ccb-5f24a93d3c16"
-                      language-code="en"></df-messenger>
-                    <!--End Chat Bot section -->
-                    {% endif %}
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for  category, message  in messages %}
-  <div id="alertMessage" class="alert alert-{{category}} text-center">
-
-    {{message}}
-  </div>
-  
-  {% endfor %}
-
-  {% endif %}
-  {% endwith %}
-  {% block content%} {% endblock content%}
-
-  <footer class="bg-secondary mt-auto pt-3 mt-3">
-      <div class="container pt-3">
-          <div class="row text-center text-white">
-              <div class="col-md-12 col-lg-4 pb-2">
-                  <h4 class="text-center text-decoration-underline">Quick Links</h4>
-                  <ul class=" nobull pt-3">
-                      <li><a href="#" class="link text-white">Privacy Policy</a></li>
-                      <li><a href="#" class="link text-white">Terms & Conditions</a></li>
-                  </ul>
-              </div>
-              <div class="col-md-12 col-lg-4">
-                  <h4 class="text-center text-decoration-underline pb-3">Social Links</h4>
-                  <a href="#" class="text-white p-2"><i class="bi-github"></i></a>
-                  <a href="#" class="text-white p-2"><i class="bi-youtube"></i></a>
-                  <a href="#" class="text-white p-2"><i class="bi-facebook"></i></a>
-                  <a href="#" class="text-white p-2"><i class="bi-twitter"></i></a>
-                  <a href="#" class="text-white p-2"><i class="bi-instagram"></i></a>
-                  <a href="#" class="text-white p-2"><i class="bi-tiktok"></i></a>
-
-              </div>
-              <div class="col-md-12 col-lg-4 pb-2">
-                  <h4 class="text-center text-decoration-underline pb-3">Contact Us</h4>
-                  <p class="lead">simpledataschool@gmail.com</p>
-              </div>
-          </div>
-          <div class="col text-white text-center position-relative">
-              <p class="lead font-weight-bold">Copyright &copy; 2023 | Simple Data School</p>
-              <a href="#" class="position-absolute bottom-0 end-0">
-                  <i class="bi bi-arrow-up-circle h1"></i>
-              </a>
-          </div>
       </div>
+    </nav>
+    {% if current_user.is_authenticated %}
+    <!-- Chat Bot section -->
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js?v=1"></script>
+    <df-messenger
+      df-cx="true"
+      location="us-central1"
+      chat-title="MyChatBot-1"
+      agent-id="452d297a-446c-46b7-9ccb-5f24a93d3c16"
+      language-code="en"
+    ></df-messenger>
+    <!--End Chat Bot section -->
+    {% endif %} {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %} {% for category, message in messages %}
+    <div id="alertMessage" class="alert alert-{{category}} text-center">
+      {{message}}
+    </div>
 
-  </footer>
+    {% endfor %} {% endif %} {% endwith %} {% block content%} {% endblock
+    content%}
 
-  
-</body>
+    <footer class="bg-secondary fixed-bottom footer ">
+      <div class="container pt-3">
+        <div class="row text-center text-white">
+          <div class="col-md-12 col-lg-4 pb-2">
+            <h4 class="text-center text-decoration-underline">Quick Links</h4>
+            <ul class="nobull pt-3">
+              <li><a href="#" class="link text-white">Privacy Policy</a></li>
+              <li>
+                <a href="#" class="link text-white">Terms & Conditions</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-12 col-lg-4">
+            <h4 class="text-center text-decoration-underline pb-3">
+              Social Links
+            </h4>
+            <a href="#" class="text-white p-2"><i class="bi-github"></i></a>
+            <a href="#" class="text-white p-2"><i class="bi-youtube"></i></a>
+            <a href="#" class="text-white p-2"><i class="bi-facebook"></i></a>
+            <a href="#" class="text-white p-2"><i class="bi-twitter"></i></a>
+            <a href="#" class="text-white p-2"><i class="bi-instagram"></i></a>
+            <a href="#" class="text-white p-2"><i class="bi-tiktok"></i></a>
+          </div>
+          <div class="col-md-12 col-lg-4 pb-2">
+            <h4 class="text-center text-decoration-underline pb-3">
+              Contact Us
+            </h4>
+            <p class="lead">simpledataschool@gmail.com</p>
+          </div>
+        </div>
+        <div class="col text-white text-center position-relative">
+          <p class="lead font-weight-bold">
+            Copyright &copy; 2023 | Simple Data School
+          </p>
+          <a href="#" class="position-absolute bottom-0 end-0">
+            <i class="bi bi-arrow-up-circle h1"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>

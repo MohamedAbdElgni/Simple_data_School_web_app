@@ -6,7 +6,6 @@ from flask import url_for, current_app
 
 def send_reset_email(user):
     token = user.get_reset_token()
-    
     # Compose the HTML email content
     html = f"""
     <html>
@@ -22,16 +21,13 @@ def send_reset_email(user):
     </body>
     </html>
     """
-    
     # Create a Message object with HTML content
     msg = Message(
         "Simple Data School Password Reset",
         sender="mohamed.pay.878@gmail.com",
         recipients=[user.email]
     )
-    
     msg.html = html
-    
     # Attach your logo as an inline image
     logo_path = 'static/PngItem_1822974.png'  # Relative path to your image
     with current_app.open_resource(logo_path) as logo:
