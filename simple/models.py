@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     lesson = db.relationship("Lesson", backref="author", lazy=True)
     bio = db.Column(db.Text, nullable=True)
+    comments = db.relationship("Comment", backref="author", lazy=True)
 
     def get_reset_token(self):
         s = Serializer(current_app.config["SECRET_KEY"], salt="pw-reset")
@@ -48,6 +49,7 @@ class Lesson(db.Model):
     slug = db.Column(db.String(32), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
+    comments = db.relationship("Comment", backref="lesson", lazy=True)
 
     def __repr__(self):
         return f"'{self.id}','{self.title}','{self.date_posted}','{self.content}','{self.thumbnail}','{self.slug}'"
@@ -62,3 +64,17 @@ class Course(db.Model):
 
     def __repr__(self):
         return f"'{self.id}','{self.title}','{self.description}','{self.icon}'"
+    
+    
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    lesson_id = db.Column(db.Integer, db.ForeignKey("lesson.id"), nullable=False)
+    user_img_file = db.Column(db.String(20), nullable=False)
+    user_name = db.Column(db.String(68), nullable=True)
+    def __repr__(self):
+        return f"'{self.id}', '{self.text}', '{self.date_posted}', '{self.user_img_file}'"
+
+    

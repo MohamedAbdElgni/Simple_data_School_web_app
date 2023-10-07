@@ -10,12 +10,14 @@ from flask import (
     abort,
     Blueprint
 )
+
 from simple import  db, modal
-from simple.models import Lesson
+from simple.models import Lesson,Comment
 from simple.helpers import save_pic
 from simple.lessons.forms import (
     NewLessonForm,
     LessonUpdateForm,
+    CommentAdd
 )
 from simple.lessons.helpers import get_previous_next_lesson, delete_pic
 
@@ -24,15 +26,33 @@ from simple.users.helpers import add_img_file
 
 lessons = Blueprint('lessons', __name__)
 
-@lessons.route("/<string:course>/<string:lesson_slug>")
+@lessons.route("/<string:course>/<string:lesson_slug>", methods=['GET', 'POST'])
 @login_required
 def lesson(lesson_slug, course):
     lesson = Lesson.query.filter_by(slug=lesson_slug).first()
-    if lesson:
-        previous_lesson, next_lesson = get_previous_next_lesson(lesson)
-    lesson_id = lesson.id if lesson else None
-    lesson = Lesson.query.get_or_404(lesson_id)
+    if not lesson:
+        return redirect(url_for('error_404'))  # Handle lesson not found gracefully
+
+    previous_lesson, next_lesson = get_previous_next_lesson(lesson)
+
+    # Create a form instance for adding comments
+    form = CommentAdd()
+
+    if form.validate_on_submit():
+        comment_text = form.comment.data
+        # Create a new comment and associate it with the lesson and the current user
+        comment = Comment(text=comment_text,user_name = current_user.username, user_id=current_user.id, lesson=lesson, user_img_file=current_user.img_file)
+        db.session.add(comment)
+        db.session.commit()
+        flash('Your comment has been added!', 'success')
+        return redirect(request.url)  # Redirect to the same lesson page after adding a comment
+
+    lesson_id = lesson.id
     img_file = url_for("static", filename=f"user_pics/{current_user.img_file}")
+
+    # Retrieve comments associated with the lesson
+    comments = Comment.query.filter_by(lesson_id=lesson_id).all()
+
     return render_template(
         "lesson_view.html",
         title=lesson.title,
@@ -40,6 +60,8 @@ def lesson(lesson_slug, course):
         img_file=img_file,
         previous_lesson=previous_lesson,
         next_lesson=next_lesson,
+        form=form,  # Pass the comment form to the template
+        comments=comments  # Pass the comments to the template
     )
     
 

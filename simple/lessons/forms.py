@@ -37,3 +37,9 @@ class NewLessonForm(FlaskForm):
 class LessonUpdateForm(NewLessonForm):
     thumbnail = FileField("Thumbnail", validators=[FileAllowed(["jpg", "png"])])
     submit = SubmitField("Update")
+    
+
+class CommentAdd(FlaskForm):
+    comment =  StringField("Add a Comment", validators=[DataRequired(), Length(max=350)])
+    submit = SubmitField("Post Comment")
+    

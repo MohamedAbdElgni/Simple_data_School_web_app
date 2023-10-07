@@ -36,6 +36,8 @@ def create_app(config_class=Config):
     ckeditor.init_app(app)
     modal.init_app(app)
     mail.init_app(app)
+    migrate.init_app(app)
+    
     
     from simple.main.routes import main # pylint: disable=wrong-import-position
     from simple.users.routes import users # pylint: disable=wrong-import-position
